@@ -307,8 +307,36 @@ tr:hover td{background:#fdf9fa}
 
       <!-- LỊCH NHẮC -->
       <div class="page" id="page-reminders">
+        <!-- LỊCH THÁNG -->
+        <div class="tbox" style="margin-bottom:1rem">
+          <div class="tbox-head">
+            <h3>📅 Lịch sự kiện tháng này</h3>
+            <div style="display:flex;gap:.5rem;align-items:center">
+              <button class="btn btn-outline" onclick="changeMonth(-1)">◀</button>
+              <span id="cal-title" style="font-weight:700;font-size:.9rem;min-width:120px;text-align:center"></span>
+              <button class="btn btn-outline" onclick="changeMonth(1)">▶</button>
+            </div>
+          </div>
+          <div style="padding:1rem">
+            <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:2px;margin-bottom:.5rem">
+              ${['CN','T2','T3','T4','T5','T6','T7'].map(d=>`<div style="text-align:center;font-size:.72rem;font-weight:700;color:#7A5C62;padding:.3rem">${d}</div>`).join('')}
+            </div>
+            <div id="cal-grid" style="display:grid;grid-template-columns:repeat(7,1fr);gap:2px"></div>
+          </div>
+        </div>
+        <!-- BẢNG NHẮC -->
         <div class="tbox">
-          <div class="tbox-head"><h3>🎂 Lịch nhắc ngày quan trọng của người dùng</h3></div>
+          <div class="tbox-head">
+            <h3>🎂 Lịch nhắc ngày quan trọng</h3>
+            <div style="display:flex;gap:.5rem">
+              <select id="reminderFilter" onchange="renderRemindersTable()" style="border:1.5px solid var(--border);border-radius:8px;padding:.35rem .6rem;font-size:.78rem">
+                <option value="all">Tất cả</option>
+                <option value="urgent">⚠️ Trong 3 ngày</option>
+                <option value="week">📅 Trong 7 ngày</option>
+                <option value="month">🗓️ Trong 30 ngày</option>
+              </select>
+            </div>
+          </div>
           <div id="reminders-table"><div class="empty-t">Đang tải...</div></div>
         </div>
       </div>
@@ -599,13 +627,74 @@ async function resolveComplaint(id,status){
 }
 
 // ── REMINDERS ─────────────────────────────────────────────
-async function loadReminders(){
-  const {data}=await db.from('reminders').select('*, customers(name,email,phone)').order('created_at',{ascending:false});
-  allReminders=data||[];
-  if(!allReminders.length){document.getElementById('reminders-table').innerHTML='<div class="empty-t">Chưa có lịch nhắc nào</div>';return;}
-  document.getElementById('reminders-table').innerHTML=`<table><thead><tr><th>Người dùng</th><th>Sự kiện</th><th>Ngày</th><th>Dịp</th><th>Tặng cho</th><th>Tags sở thích</th><th>Zalo nhận</th><th>Còn lại</th></tr></thead><tbody>`+
-    allReminders.map(r=>{const days=daysUntil(r.event_date);return `<tr><td><strong>${r.customers?.name||'—'}</strong><br/><span style="font-size:.68rem;color:var(--muted)">${r.customers?.phone||''}</span></td><td><strong>${r.event_name}</strong></td><td>${r.event_date}</td><td style="font-size:.75rem">${oLabel(r.occasion)}</td><td>${r.recipient_name||'—'}</td><td style="font-size:.72rem;color:var(--muted)">${(r.tags||[]).join(', ')||'—'}</td><td style="color:var(--blue);font-size:.75rem">${r.zalo_phone||'—'}</td><td><span class="bdg ${days<=3?'bdg-rose':days<=7?'bdg-gold':'bdg-blue'}">${days===0?'Hôm nay':days+' ngày'}</span></td></tr>`;}).join('')+'</tbody></table>';
+let calYear = new Date().getFullYear(), calMonth = new Date().getMonth();
+
+function changeMonth(dir) {
+  calMonth += dir;
+  if (calMonth > 11) { calMonth = 0; calYear++; }
+  if (calMonth < 0) { calMonth = 11; calYear--; }
+  renderCalendar();
 }
+
+function renderCalendar() {
+  const months = ['Tháng 1','Tháng 2','Tháng 3','Tháng 4','Tháng 5','Tháng 6','Tháng 7','Tháng 8','Tháng 9','Tháng 10','Tháng 11','Tháng 12'];
+  document.getElementById('cal-title').textContent = months[calMonth] + ' ' + calYear;
+  const firstDay = new Date(calYear, calMonth, 1).getDay();
+  const daysInMonth = new Date(calYear, calMonth + 1, 0).getDate();
+  const today = new Date(); today.setHours(0,0,0,0);
+
+  // Map events theo ngày
+  const eventMap = {};
+  allReminders.forEach(r => {
+    const [d, m] = (r.event_date || '').split('/').map(Number);
+    if (m === calMonth + 1) {
+      if (!eventMap[d]) eventMap[d] = [];
+      eventMap[d].push(r);
+    }
+  });
+
+  let html = '';
+  for (let i = 0; i < firstDay; i++) html += '<div></div>';
+  for (let d = 1; d <= daysInMonth; d++) {
+    const isToday = new Date(calYear, calMonth, d).getTime() === today.getTime();
+    const hasEvent = eventMap[d];
+    const dotColor = hasEvent ? (hasEvent.some(r => daysUntil(r.event_date) <= 3) ? '#B5344A' : '#C9901A') : '';
+    html += `<div style="border-radius:8px;padding:.35rem;min-height:44px;background:${isToday ? '#F9EEF0' : '#fafafa'};border:1.5px solid ${isToday ? '#B5344A' : '#EDD9DC'};cursor:${hasEvent ? 'pointer' : 'default'};position:relative" ${hasEvent ? `onclick="showDayEvents(${d})"` : ''}>
+      <div style="font-size:.72rem;font-weight:${isToday ? '800' : '600'};color:${isToday ? '#B5344A' : '#2A1A1F'}">${d}</div>
+      ${hasEvent ? `<div style="margin-top:2px">${hasEvent.slice(0,2).map(r=>`<div style="font-size:.58rem;background:${dotColor};color:#fff;border-radius:4px;padding:1px 3px;margin-bottom:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${r.event_name}</div>`).join('')}${hasEvent.length > 2 ? `<div style="font-size:.56rem;color:${dotColor}">+${hasEvent.length-2} nữa</div>` : ''}</div>` : ''}
+    </div>`;
+  }
+  document.getElementById('cal-grid').innerHTML = html;
+}
+
+function showDayEvents(d) {
+  const events = allReminders.filter(r => {
+    const [rd, rm] = (r.event_date || '').split('/').map(Number);
+    return rd === d && rm === calMonth + 1;
+  });
+  if (!events.length) return;
+  showToast(`📅 ${d}/${calMonth+1}: ${events.map(r => r.event_name + ' (' + (r.customers?.name||'?') + ')').join(', ')}`);
+}
+
+function renderRemindersTable() {
+  const filter = document.getElementById('reminderFilter')?.value || 'all';
+  let list = allReminders.map(r => ({ ...r, _days: daysUntil(r.event_date) }));
+  if (filter === 'urgent') list = list.filter(r => r._days <= 3);
+  else if (filter === 'week') list = list.filter(r => r._days <= 7);
+  else if (filter === 'month') list = list.filter(r => r._days <= 30);
+  list.sort((a, b) => a._days - b._days);
+  if (!list.length) { document.getElementById('reminders-table').innerHTML = '<div class="empty-t">Không có sự kiện nào</div>'; return; }
+  document.getElementById('reminders-table').innerHTML = `<table><thead><tr><th>Người dùng</th><th>Sự kiện</th><th>Ngày</th><th>Dịp</th><th>Tặng cho</th><th>Sở thích</th><th>Zalo</th><th>Còn lại</th></tr></thead><tbody>` +
+    list.map(r => `<tr><td><strong>${r.customers?.name||'—'}</strong><br/><span style="font-size:.68rem;color:var(--muted)">${r.customers?.phone||''}</span></td><td><strong>${r.event_name}</strong></td><td>${r.event_date}</td><td style="font-size:.75rem">${oLabel(r.occasion)}</td><td>${r.recipient_name||'—'}</td><td style="font-size:.72rem;color:var(--muted)">${(r.tags||[]).join(', ')||'—'}</td><td style="color:var(--blue);font-size:.75rem">${r.zalo_phone||'—'}</td><td><span class="bdg ${r._days<=3?'bdg-rose':r._days<=7?'bdg-gold':'bdg-blue'}">${r._days===0?'Hôm nay':r._days+' ngày'}</span></td></tr>`).join('') + '</tbody></table>';
+}
+
+async function loadReminders() {
+  const { data } = await db.from('reminders').select('*, customers(name,email,phone)').order('created_at', { ascending: false });
+  allReminders = data || [];
+  renderCalendar();
+  renderRemindersTable();
+}
+
 
 // ── COUPONS ───────────────────────────────────────────────
 // ── SẢN PHẨM ─────────────────────────────────────────────
@@ -677,7 +766,8 @@ async function toggleProduct(id, active) {
 
 async function deleteProduct(id) {
   if (!confirm('Xóa sản phẩm này?')) return;
-  await db.from('products').delete().eq('id', id);
+  const { error } = await db.from('products').delete().eq('id', id);
+  if (error) { showToast('❌ Lỗi xóa: ' + error.message); return; }
   showToast('🗑️ Đã xóa!');
   await loadProducts();
 }
