@@ -407,7 +407,7 @@ function doLogout(){
 }
 
 // ── HELPERS ───────────────────────────────────────────────
-const fmt=n=>Number(n||0).toLocaleString('vi-VN')+'₫';
+// fmt đã được định nghĩa trong config.js
 function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),3000);}
 function openModal(id){document.getElementById(id).classList.add('open');}
 function closeModal(id){document.getElementById(id).classList.remove('open');}
