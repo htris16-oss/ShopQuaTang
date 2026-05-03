@@ -10,7 +10,7 @@ const SUPABASE_URL = 'https://xjbbyqqgnafavjykjowl.supabase.co';
 
 // ✅ Anon key (public) - OK để để ở client
 // Vào Supabase > Settings > API > "anon public" key
-const SUPABASE_KEY = 'THAY_BANG_ANON_KEY_TU_SUPABASE_DASHBOARD';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhqYmJ5cXFnbmFmYXZqeWtqb3dsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzcyODYwOTAsImV4cCI6MjA5Mjg2MjA5MH0.VKlaS11FmoVz4WhPlroduudmWPCFWod--yVy3fBgkaY';
 
 // ❌ ĐÃ XÓA: ADMIN_EMAIL và ADMIN_PWD không còn hardcode ở đây nữa
 // Admin đăng nhập qua doAdminLogin() - xác thực với bảng `admins` trong DB
