@@ -175,6 +175,7 @@ tr:hover td{background:#fdf9fa}
       <button class="nav-item active" onclick="showPage('overview',this)"><span class="nav-icon">📊</span><span>Tổng quan</span></button>
       <button class="nav-item" onclick="showPage('users',this)"><span class="nav-icon">👥</span><span>Người dùng</span></button>
       <button class="nav-item" onclick="showPage('shops',this)"><span class="nav-icon">🏪</span><span>Shop đối tác</span></button>
+      <button class="nav-item" onclick="showPage('products',this)"><span class="nav-icon">🛍️</span><span>Sản phẩm</span></button>
       <button class="nav-item" onclick="showPage('orders',this)"><span class="nav-icon">📦</span><span>Đơn hàng</span></button>
       <button class="nav-item" onclick="showPage('complaints',this)"><span class="nav-icon">📣</span><span>Khiếu nại</span><span class="nav-dot" id="ndot-complaints">0</span></button>
       <button class="nav-item" onclick="showPage('reminders',this)"><span class="nav-icon">🎂</span><span>Lịch nhắc quà</span></button>
@@ -242,6 +243,46 @@ tr:hover td{background:#fdf9fa}
       </div>
 
       <!-- ĐƠN HÀNG -->
+      <!-- ── SẢN PHẨM ── -->
+      <div class="page" id="page-products">
+        <div class="tbox" style="margin-bottom:1rem">
+          <div class="tbox-head"><h3>➕ Thêm sản phẩm mới</h3></div>
+          <div style="padding:1rem;display:grid;grid-template-columns:1fr 1fr;gap:.8rem">
+            <div class="form-group"><label>Tên sản phẩm *</label><input type="text" id="pdName" placeholder="VD: Gấu bông tim đỏ"/></div>
+            <div class="form-group"><label>Giá bán (VNĐ) *</label><input type="number" id="pdPrice" placeholder="89000"/></div>
+            <div class="form-group"><label>Link ảnh sản phẩm</label><input type="text" id="pdImage" placeholder="https://..."/></div>
+            <div class="form-group"><label>Số lượng tồn kho</label><input type="number" id="pdStock" placeholder="99"/></div>
+            <div class="form-group" style="grid-column:1/-1"><label>Mô tả sản phẩm</label><textarea id="pdDesc" placeholder="Mô tả chi tiết sản phẩm..." style="width:100%;border:1.5px solid var(--border);border-radius:8px;padding:.6rem;font-family:inherit;font-size:.84rem;min-height:80px;resize:vertical;background:#fafafa"></textarea></div>
+            <div class="form-group"><label>Dịp phù hợp</label>
+              <select id="pdOccasion" multiple style="width:100%;border:1.5px solid var(--border);border-radius:8px;padding:.5rem;font-size:.82rem;height:100px">
+                <option value="sinh-nhat">🎂 Sinh nhật</option>
+                <option value="valentine">💝 Valentine</option>
+                <option value="8-3">🌸 8/3</option>
+                <option value="20-11">📚 20/11</option>
+                <option value="tet">🧧 Tết</option>
+                <option value="giang-sinh">🎄 Giáng sinh</option>
+                <option value="ky-niem">💫 Kỷ niệm</option>
+                <option value="khac">📌 Khác</option>
+              </select>
+            </div>
+            <div class="form-group"><label>Shop *</label>
+              <select id="pdShop" style="width:100%;border:1.5px solid var(--border);border-radius:8px;padding:.6rem;font-size:.84rem">
+                <option value="">-- Chọn shop --</option>
+              </select>
+            </div>
+          </div>
+          <div style="padding:0 1rem 1rem">
+            <button class="btn btn-green" onclick="addProduct()" style="width:100%">💾 Thêm sản phẩm</button>
+          </div>
+        </div>
+        <div class="tbox">
+          <div class="tbox-head"><h3>🛍️ Danh sách sản phẩm</h3>
+            <input type="text" id="pdSearch" placeholder="🔍 Tìm sản phẩm..." oninput="renderProducts()" style="border:1.5px solid var(--border);border-radius:8px;padding:.4rem .7rem;font-size:.82rem;width:200px"/>
+          </div>
+          <div id="products-table"><div class="empty-t">Đang tải...</div></div>
+        </div>
+      </div>
+
       <div class="page" id="page-orders">
         <div class="tbox">
           <div class="tbox-head">
@@ -421,13 +462,13 @@ function showPage(name,btn){
   document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
   document.getElementById('page-'+name).classList.add('active');
   if(btn)btn.classList.add('active');
-  const T={overview:'📊 Tổng quan',users:'👥 Người dùng',shops:'🏪 Shop đối tác',orders:'📦 Đơn hàng',complaints:'📣 Khiếu nại',reminders:'🎂 Lịch nhắc quà',coupons:'🎟️ Mã giảm giá',wheel:'🎡 Vòng quay',announce:'📢 Thông báo'};
+  const T={overview:'📊 Tổng quan',users:'👥 Người dùng',shops:'🏪 Shop đối tác',products:'🛍️ Sản phẩm',orders:'📦 Đơn hàng',complaints:'📣 Khiếu nại',reminders:'🎂 Lịch nhắc quà',coupons:'🎟️ Mã giảm giá',wheel:'🎡 Vòng quay',announce:'📢 Thông báo'};
   document.getElementById('pageTitle').textContent=T[name]||name;
 }
 
 // ── LOAD ALL ──────────────────────────────────────────────
 async function loadAll(){
-  await Promise.all([loadUsers(),loadShops(),loadOrders(),loadCoupons(),loadWheelPrizes(),loadComplaints(),loadAnnounce(),loadReminders()]);
+  await Promise.all([loadUsers(),loadShops(),loadOrders(),loadProducts(),loadCoupons(),loadWheelPrizes(),loadComplaints(),loadAnnounce(),loadReminders()]);
   updateStats();
 }
 
@@ -567,6 +608,80 @@ async function loadReminders(){
 }
 
 // ── COUPONS ───────────────────────────────────────────────
+// ── SẢN PHẨM ─────────────────────────────────────────────
+let allProducts = [];
+
+async function loadProducts() {
+  const { data } = await db.from('products').select('*, shops(name)').order('created_at', { ascending: false });
+  allProducts = data || [];
+  // Load shops vào dropdown
+  const { data: shops } = await db.from('shops').select('id,name').eq('is_active', true);
+  const sel = document.getElementById('pdShop');
+  if (sel && shops) {
+    sel.innerHTML = '<option value="">-- Chọn shop --</option>' +
+      shops.map(s => `<option value="${s.id}">${s.name}</option>`).join('');
+  }
+  renderProducts();
+}
+
+function renderProducts() {
+  const q = (document.getElementById('pdSearch')?.value || '').toLowerCase();
+  const list = allProducts.filter(p => !q || p.name.toLowerCase().includes(q));
+  const el = document.getElementById('products-table');
+  if (!list.length) { el.innerHTML = '<div class="empty-t">Chưa có sản phẩm nào</div>'; return; }
+  el.innerHTML = `<table><thead><tr>
+    <th>Ảnh</th><th>Tên sản phẩm</th><th>Shop</th><th>Giá</th><th>Tồn kho</th><th>Trạng thái</th><th></th>
+  </tr></thead><tbody>` +
+    list.map(p => `<tr>
+      <td><img src="${p.image_url || ''}" style="width:48px;height:48px;object-fit:cover;border-radius:8px;background:#f0e8e9" onerror="this.style.background='#f0e8e9';this.removeAttribute('src')"/></td>
+      <td><strong style="font-size:.84rem">${p.name}</strong><div style="font-size:.72rem;color:#7A5C62">${(p.description || '').slice(0, 60)}${p.description?.length > 60 ? '...' : ''}</div></td>
+      <td style="font-size:.8rem">${p.shops?.name || '—'}</td>
+      <td><strong style="color:#B5344A">${fmt(p.price)}</strong></td>
+      <td style="font-size:.82rem">${p.stock ?? '∞'}</td>
+      <td><span class="bdg ${p.is_active ? 'bdg-green' : 'bdg-rose'}">${p.is_active ? '✅ Hiện' : '❌ Ẩn'}</span></td>
+      <td style="display:flex;gap:.3rem;flex-wrap:wrap">
+        <button class="btn btn-outline" style="font-size:.72rem" onclick="toggleProduct('${p.id}',${!p.is_active})">${p.is_active ? 'Ẩn' : 'Hiện'}</button>
+        <button class="btn btn-red" style="font-size:.72rem" onclick="deleteProduct('${p.id}')">🗑️</button>
+      </td>
+    </tr>`).join('') + '</tbody></table>';
+}
+
+async function addProduct() {
+  const name = document.getElementById('pdName').value.trim();
+  const price = parseFloat(document.getElementById('pdPrice').value);
+  const image_url = document.getElementById('pdImage').value.trim();
+  const stock = parseInt(document.getElementById('pdStock').value) || 0;
+  const description = document.getElementById('pdDesc').value.trim();
+  const shop_id = document.getElementById('pdShop').value;
+  const occasions = [...document.getElementById('pdOccasion').selectedOptions].map(o => o.value);
+  if (!name) { showToast('⚠️ Nhập tên sản phẩm!'); return; }
+  if (!price || price <= 0) { showToast('⚠️ Nhập giá hợp lệ!'); return; }
+  if (!shop_id) { showToast('⚠️ Chọn shop!'); return; }
+  const { error } = await db.from('products').insert({ name, price, image_url, stock, description, shop_id, occasions, is_active: true });
+  if (error) { showToast('❌ Lỗi: ' + error.message); return; }
+  showToast('✅ Đã thêm sản phẩm: ' + name);
+  document.getElementById('pdName').value = '';
+  document.getElementById('pdPrice').value = '';
+  document.getElementById('pdImage').value = '';
+  document.getElementById('pdStock').value = '';
+  document.getElementById('pdDesc').value = '';
+  document.getElementById('pdShop').value = '';
+  await loadProducts();
+}
+
+async function toggleProduct(id, active) {
+  await db.from('products').update({ is_active: active }).eq('id', id);
+  showToast(active ? '✅ Đã hiện sản phẩm!' : '❌ Đã ẩn sản phẩm!');
+  await loadProducts();
+}
+
+async function deleteProduct(id) {
+  if (!confirm('Xóa sản phẩm này?')) return;
+  await db.from('products').delete().eq('id', id);
+  showToast('🗑️ Đã xóa!');
+  await loadProducts();
+}
+
 async function loadCoupons(){const {data}=await db.from('coupons').select('*').order('created_at',{ascending:false});allCoupons=data||[];renderCoupons();}
 function renderCoupons(){
   if(!allCoupons.length){document.getElementById('coupons-table').innerHTML='<div class="empty-t">Chưa có mã</div>';return;}
