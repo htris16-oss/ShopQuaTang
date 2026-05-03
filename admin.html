@@ -318,9 +318,7 @@ tr:hover td{background:#fdf9fa}
             </div>
           </div>
           <div style="padding:1rem">
-            <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:2px;margin-bottom:.5rem">
-              ${['CN','T2','T3','T4','T5','T6','T7'].map(d=>`<div style="text-align:center;font-size:.72rem;font-weight:700;color:#7A5C62;padding:.3rem">${d}</div>`).join('')}
-            </div>
+            <div class="cal-header" style="display:grid;grid-template-columns:repeat(7,1fr);gap:2px;margin-bottom:.5rem"></div>
             <div id="cal-grid" style="display:grid;grid-template-columns:repeat(7,1fr);gap:2px"></div>
           </div>
         </div>
@@ -642,6 +640,9 @@ function renderCalendar() {
   const firstDay = new Date(calYear, calMonth, 1).getDay();
   const daysInMonth = new Date(calYear, calMonth + 1, 0).getDate();
   const today = new Date(); today.setHours(0,0,0,0);
+  const dayNames = ['CN','T2','T3','T4','T5','T6','T7'];
+  document.querySelector('#page-reminders .cal-header').innerHTML =
+    dayNames.map(d=>`<div style="text-align:center;font-size:.72rem;font-weight:700;color:#7A5C62;padding:.3rem">${d}</div>`).join('');
 
   // Map events theo ngày
   const eventMap = {};
@@ -765,10 +766,10 @@ async function toggleProduct(id, active) {
 }
 
 async function deleteProduct(id) {
-  if (!confirm('Xóa sản phẩm này?')) return;
-  const { error } = await db.from('products').delete().eq('id', id);
-  if (error) { showToast('❌ Lỗi xóa: ' + error.message); return; }
-  showToast('🗑️ Đã xóa!');
+  if (!confirm('Ẩn sản phẩm này?')) return;
+  const { error } = await db.from('products').update({ is_active: false }).eq('id', id);
+  if (error) { showToast('❌ Lỗi: ' + error.message); return; }
+  showToast('✅ Đã ẩn sản phẩm!');
   await loadProducts();
 }
 
