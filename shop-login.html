@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Đăng nhập – Quà Tặng Yêu Thương</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Be+Vietnam+Pro:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{--rose:#B5344A;--rose-light:#F9EEF0;--gold:#C9901A;--gold-light:#FDF3E0;--cream:#FDFAF6;--dark:#2A1A1F;--muted:#7A5C62;--white:#fff;--border:#EDD9DC;--green:#2E7D52;--green-light:#E8F5EE;--blue:#1a6fc9;--font-display:'Playfair Display',Georgia,serif;--font-body:'Be Vietnam Pro',sans-serif}
+body{font-family:var(--font-body);background:var(--cream);color:var(--dark);min-height:100vh;display:flex;flex-direction:column}
+nav{background:var(--white);border-bottom:1px solid var(--border);padding:0 5%}
+.nav-inner{display:flex;align-items:center;justify-content:space-between;height:60px}
+.logo{font-family:var(--font-display);font-size:1.2rem;color:var(--rose);font-style:italic;text-decoration:none}
+.logo span{color:var(--gold);font-style:normal}
+.back-link{color:var(--muted);font-size:.84rem;text-decoration:none;display:flex;align-items:center;gap:.3rem}
+.back-link:hover{color:var(--rose)}
+
+main{flex:1;display:flex;align-items:center;justify-content:center;padding:2rem}
+.auth-wrap{width:100%;max-width:460px}
+.auth-head{text-align:center;margin-bottom:1.8rem}
+.auth-head .icon{font-size:2.5rem;margin-bottom:.7rem}
+.auth-head h1{font-family:var(--font-display);font-size:1.65rem;margin-bottom:.35rem}
+.auth-head p{color:var(--muted);font-size:.85rem}
+
+.tabs{display:flex;background:var(--rose-light);border-radius:50px;padding:.22rem;margin-bottom:1.5rem;border:1px solid var(--border)}
+.tab{flex:1;padding:.55rem;text-align:center;border-radius:50px;cursor:pointer;font-size:.84rem;font-weight:600;color:var(--muted);transition:all .2s;user-select:none}
+.tab.active{background:var(--white);color:var(--rose);box-shadow:0 2px 8px rgba(181,52,74,.12)}
+
+.card{background:var(--white);border-radius:18px;padding:1.7rem;border:1px solid var(--border);box-shadow:0 4px 24px rgba(42,26,31,.07)}
+.form-group{margin-bottom:.88rem}
+.form-group label{display:block;font-size:.8rem;font-weight:600;color:var(--dark);margin-bottom:.3rem}
+.form-group input{width:100%;border:1.5px solid var(--border);border-radius:10px;padding:.62rem .88rem;font-family:var(--font-body);font-size:.86rem;outline:none;transition:border .2s;background:var(--cream);color:var(--dark)}
+.form-group input:focus{border-color:var(--rose);box-shadow:0 0 0 3px rgba(181,52,74,.08)}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:.7rem}
+.submit-btn{width:100%;background:var(--rose);color:#fff;border:none;padding:.8rem;border-radius:12px;font-size:.92rem;font-weight:700;cursor:pointer;font-family:var(--font-body);transition:all .2s;margin-top:.35rem}
+.submit-btn:hover{background:#9a2a3e;transform:translateY(-1px)}
+.submit-btn:disabled{opacity:.5;cursor:not-allowed;transform:none}
+.msg{border-radius:9px;padding:.7rem .9rem;font-size:.8rem;margin-bottom:.85rem;display:none;line-height:1.55}
+.msg-err{background:#fde8ec;border:1px solid #f5c6cc;color:#721c24}
+.msg-ok{background:var(--green-light);border:1px solid #c6e8d5;color:var(--green)}
+
+.forgot-link{text-align:right;font-size:.76rem;color:var(--blue);cursor:pointer;margin-top:.3rem;display:block;text-decoration:none}
+.forgot-link:hover{text-decoration:underline}
+
+.benefits{margin-top:1.5rem;background:var(--gold-light);border:1px solid #e5c97a;border-radius:14px;padding:1.1rem}
+.benefits h4{font-size:.86rem;font-weight:700;color:var(--gold);margin-bottom:.7rem}
+.benefit-item{display:flex;align-items:flex-start;gap:.55rem;margin-bottom:.48rem;font-size:.8rem;color:var(--dark)}
+
+/* Forgot pwd modal */
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:300;opacity:0;pointer-events:none;transition:opacity .25s;display:flex;align-items:center;justify-content:center;padding:1rem}
+.overlay.open{opacity:1;pointer-events:all}
+.modal{background:var(--white);border-radius:18px;width:100%;max-width:420px;padding:1.8rem;transform:scale(.95);transition:transform .25s}
+.overlay.open .modal{transform:scale(1)}
+.modal h3{font-family:var(--font-display);font-size:1.1rem;margin-bottom:.4rem}
+.modal p{font-size:.82rem;color:var(--muted);margin-bottom:1.1rem;line-height:1.6}
+</style>
+</head>
+<body>
+<nav>
+  <div class="nav-inner">
+    <a href="index.html" class="logo">Quà Tặng <span>Yêu Thương</span></a>
+    <a href="index.html" class="back-link">← Về trang chủ</a>
+  </div>
+</nav>
+
+<main>
+  <div class="auth-wrap">
+    <div class="auth-head">
+      <div class="icon">👤</div>
+      <h1>Tài khoản của bạn</h1>
+      <p>Đăng nhập để mua sắm và theo dõi đơn hàng</p>
+    </div>
+
+    <div class="tabs">
+      <div class="tab active" id="tabLogin" onclick="switchTab('login')">Đăng nhập</div>
+      <div class="tab" id="tabReg" onclick="switchTab('register')">Đăng ký</div>
+    </div>
+
+    <!-- ĐĂNG NHẬP -->
+    <div id="formLogin">
+      <div class="card">
+        <div class="msg msg-err" id="loginErr"></div>
+        <div class="msg msg-ok"  id="loginOk"></div>
+        <div class="form-group">
+          <label>📧 Email</label>
+          <input type="email" id="lEmail" placeholder="ban@email.com"/>
+        </div>
+        <div class="form-group">
+          <label>🔒 Mật khẩu</label>
+          <input type="password" id="lPwd" placeholder="Nhập mật khẩu"/>
+          <a class="forgot-link" onclick="openForgot()">Quên mật khẩu?</a>
+        </div>
+        <button class="submit-btn" id="loginBtn" onclick="doLogin()">🔑 Đăng nhập</button>
+      </div>
+    </div>
+
+    <!-- ĐĂNG KÝ -->
+    <div id="formReg" style="display:none">
+      <div class="card">
+        <div class="msg msg-err" id="regErr"></div>
+        <div class="msg msg-ok"  id="regOk"></div>
+        <div class="form-group"><label>👤 Họ và tên *</label><input type="text" id="rName" placeholder="Nguyễn Văn A"/></div>
+        <div class="form-row">
+          <div class="form-group"><label>📧 Email *</label><input type="email" id="rEmail" placeholder="ban@email.com"/></div>
+          <div class="form-group"><label>📞 Điện thoại</label><input type="tel" id="rPhone" placeholder="0901 234 567"/></div>
+        </div>
+        <div class="form-group"><label>📱 Số Zalo (nhận thông báo)</label><input type="tel" id="rZalo" placeholder="Mặc định dùng SĐT trên"/></div>
+        <div class="form-row">
+          <div class="form-group"><label>🔒 Mật khẩu *</label><input type="password" id="rPwd" placeholder="Tối thiểu 6 ký tự"/></div>
+          <div class="form-group"><label>🔒 Xác nhận *</label><input type="password" id="rPwd2" placeholder="Nhập lại"/></div>
+        </div>
+        <button class="submit-btn" id="regBtn" onclick="doRegister()">🚀 Tạo tài khoản</button>
+      </div>
+    </div>
+
+    <div class="benefits">
+      <h4>🌟 Lợi ích khi có tài khoản</h4>
+      <div class="benefit-item"><span>📦</span><span>Theo dõi đơn hàng theo thời gian thực</span></div>
+      <div class="benefit-item"><span>🎂</span><span>Lịch nhắc ngày quan trọng + gợi ý quà tự động</span></div>
+      <div class="benefit-item"><span>🎡</span><span>Quay vòng may mắn nhận mã giảm giá mỗi ngày</span></div>
+      <div class="benefit-item"><span>🔔</span><span>Nhận thông báo Flash Sale sớm nhất qua Zalo</span></div>
+    </div>
+  </div>
+</main>
+
+<!-- Quên mật khẩu -->
+<div class="overlay" id="forgotOverlay" onclick="if(event.target===this)closeForgot()">
+  <div class="modal">
+    <h3>🔑 Quên mật khẩu</h3>
+    <p>Nhập số điện thoại Zalo đã đăng ký. Chúng tôi sẽ gửi mã xác nhận qua Zalo để đặt lại mật khẩu.</p>
+    <div class="msg msg-err" id="forgotErr"></div>
+    <div class="msg msg-ok"  id="forgotOk"></div>
+    <div class="form-group"><label>📱 Số điện thoại / Zalo</label><input type="tel" id="forgotPhone" placeholder="0901 234 567"/></div>
+    <div id="forgotStep2" style="display:none">
+      <div class="form-group"><label>🔢 Mã xác nhận (6 số)</label><input type="text" id="forgotToken" placeholder="Nhập mã từ Zalo" maxlength="6"/></div>
+      <div class="form-group"><label>🔒 Mật khẩu mới</label><input type="password" id="forgotPwd" placeholder="Tối thiểu 6 ký tự"/></div>
+    </div>
+    <button class="submit-btn" id="forgotBtn" onclick="doForgot()">📨 Gửi mã xác nhận</button>
+    <button onclick="closeForgot()" style="width:100%;background:none;border:1.5px solid var(--border);border-radius:12px;padding:.72rem;font-size:.88rem;font-weight:600;cursor:pointer;font-family:var(--font-body);color:var(--muted);margin-top:.5rem">Đóng</button>
+  </div>
+</div>
+
+<script src="config.js"></script>
+<script>
+let db, forgotStep = 1, forgotCustomerId = null, forgotTokenValue = null;
+
+loadSupabaseLib(c => {
+  db = c;
+  if(getShop()) window.location.href = 'shop-dashboard.html';
+  // Nếu đã login → redirect
+  if (getCustomer()) window.location.href = 'customer-account.html';
+});
+
+function switchTab(t) {
+  document.querySelectorAll('.msg').forEach(e => e.style.display='none');
+  document.getElementById('tabLogin').classList.toggle('active', t==='login');
+  document.getElementById('tabReg').classList.toggle('active', t==='register');
+  document.getElementById('formLogin').style.display = t==='login'?'block':'none';
+  document.getElementById('formReg').style.display   = t==='register'?'block':'none';
+}
+
+function showMsg(id, msg) {
+  document.querySelectorAll('.msg').forEach(e => e.style.display='none');
+  const el = document.getElementById(id);
+  if (el) { el.textContent=msg; el.style.display='block'; }
+}
+
+// ── ĐĂNG NHẬP ─────────────────────────────────────────────
+async function doLogin() {
+  const email = document.getElementById('lEmail').value.trim();
+  const pwd   = document.getElementById('lPwd').value;
+  if (!email||!pwd) { showMsg('loginErr','⚠️ Vui lòng nhập email và mật khẩu!'); return; }
+  if (!db) { showMsg('loginErr','⚠️ Đang tải, thử lại!'); return; }
+
+  // Admin đăng nhập riêng tại admin.html
+
+  const btn = document.getElementById('loginBtn');
+  btn.disabled=true; btn.textContent='⏳ Đang đăng nhập...';
+  try {
+    const hash = await hashPwd(pwd);
+    const { data, error } = await db.from('customers').select('*').eq('email',email).eq('password_hash',hash).single();
+    if (error||!data) throw new Error('Email hoặc mật khẩu không đúng!');
+    if (data.is_locked) throw new Error('Tài khoản bị khóa! Liên hệ hỗ trợ.');
+    // Cập nhật last_seen
+    await db.from('customers').update({ last_seen: new Date().toISOString() }).eq('id', data.id);
+    setCustomer({ id:data.id, name:data.name, email:data.email, phone:data.phone||'', address:data.address||'', zalo_phone:data.zalo_phone||data.phone||'' });
+    showMsg('loginOk','✅ Đăng nhập thành công! Đang chuyển...');
+    setTimeout(() => window.location.href = 'customer-account.html', 800);
+  } catch(e) {
+    showMsg('loginErr','❌ '+e.message);
+    btn.disabled=false; btn.textContent='🔑 Đăng nhập';
+  }
+}
+
+// ── ĐĂNG KÝ ───────────────────────────────────────────────
+async function doRegister() {
+  const name  = document.getElementById('rName').value.trim();
+  const email = document.getElementById('rEmail').value.trim();
+  const phone = document.getElementById('rPhone').value.trim();
+  const zalo  = document.getElementById('rZalo').value.trim() || phone;
+  const pwd   = document.getElementById('rPwd').value;
+  const pwd2  = document.getElementById('rPwd2').value;
+  if (!name)            { showMsg('regErr','⚠️ Vui lòng nhập họ tên!'); return; }
+  if (!email||!email.includes('@')) { showMsg('regErr','⚠️ Email không hợp lệ!'); return; }
+  if (pwd.length<6)     { showMsg('regErr','⚠️ Mật khẩu tối thiểu 6 ký tự!'); return; }
+  if (pwd!==pwd2)       { showMsg('regErr','⚠️ Mật khẩu xác nhận không khớp!'); return; }
+  if (!db) { showMsg('regErr','⚠️ Đang tải, thử lại!'); return; }
+  const btn = document.getElementById('regBtn');
+  btn.disabled=true; btn.textContent='⏳ Đang tạo tài khoản...';
+  try {
+    const hash = await hashPwd(pwd);
+    const { data, error } = await db.from('customers').insert({ name, email, phone, zalo_phone:zalo, password_hash:hash }).select().single();
+    if (error) {
+      if (error.code==='23505') throw new Error('Email này đã được đăng ký!');
+      throw new Error(error.message);
+    }
+    setCustomer({ id:data.id, name:data.name, email:data.email, phone:data.phone||'', address:'', zalo_phone:data.zalo_phone||'' });
+    showMsg('regOk','🎉 Tạo tài khoản thành công!');
+    setTimeout(() => window.location.href = 'customer-account.html', 900);
+  } catch(e) {
+    showMsg('regErr','❌ '+e.message);
+    btn.disabled=false; btn.textContent='🚀 Tạo tài khoản';
+  }
+}
+
+// ── QUÊN MẬT KHẨU ────────────────────────────────────────
+function openForgot()  { forgotStep=1; document.getElementById('forgotOverlay').classList.add('open'); document.querySelectorAll('#forgotOverlay .msg').forEach(e=>e.style.display='none'); document.getElementById('forgotStep2').style.display='none'; document.getElementById('forgotBtn').textContent='📨 Gửi mã xác nhận'; }
+function closeForgot() { document.getElementById('forgotOverlay').classList.remove('open'); }
+
+async function doForgot() {
+  if (forgotStep===1) {
+    const phone = document.getElementById('forgotPhone').value.trim();
+    if (!phone) { document.getElementById('forgotErr').textContent='⚠️ Vui lòng nhập số điện thoại!'; document.getElementById('forgotErr').style.display='block'; return; }
+    const { data } = await db.from('customers').select('id,name').eq('phone',phone).single();
+    if (!data) { document.getElementById('forgotErr').textContent='❌ Không tìm thấy tài khoản với số này!'; document.getElementById('forgotErr').style.display='block'; return; }
+    // Tạo token 6 số
+    forgotTokenValue = Math.floor(100000+Math.random()*900000).toString();
+    forgotCustomerId = data.id;
+    const expires = new Date(Date.now()+15*60000).toISOString();
+    await db.from('pwd_resets').insert({ customer_id:data.id, token:forgotTokenValue, expires_at:expires });
+    // Gửi Zalo (hiện tại log ra console)
+    await sendZaloNotify(phone, `[Quà Tặng Yêu Thương] Mã đặt lại mật khẩu của bạn là: ${forgotTokenValue} (hết hạn sau 15 phút)`);
+    document.getElementById('forgotOk').textContent=`✅ Đã gửi mã xác nhận về Zalo ${phone}. (Kiểm tra console nếu chưa có OA)`;
+    document.getElementById('forgotOk').style.display='block';
+    document.getElementById('forgotErr').style.display='none';
+    document.getElementById('forgotStep2').style.display='block';
+    document.getElementById('forgotBtn').textContent='✅ Xác nhận & đặt lại mật khẩu';
+    forgotStep=2;
+  } else {
+    const token = document.getElementById('forgotToken').value.trim();
+    const newPwd = document.getElementById('forgotPwd').value;
+    if (token!==forgotTokenValue) { document.getElementById('forgotErr').textContent='❌ Mã xác nhận không đúng!'; document.getElementById('forgotErr').style.display='block'; return; }
+    if (newPwd.length<6) { document.getElementById('forgotErr').textContent='⚠️ Mật khẩu tối thiểu 6 ký tự!'; document.getElementById('forgotErr').style.display='block'; return; }
+    const hash = await hashPwd(newPwd);
+    await db.from('customers').update({password_hash:hash}).eq('id',forgotCustomerId);
+    await db.from('pwd_resets').update({is_used:true}).eq('customer_id',forgotCustomerId).eq('token',forgotTokenValue);
+    document.getElementById('forgotOk').textContent='🎉 Đặt lại mật khẩu thành công! Hãy đăng nhập lại.';
+    document.getElementById('forgotOk').style.display='block';
+    document.getElementById('forgotErr').style.display='none';
+    setTimeout(()=>closeForgot(), 2000);
+  }
+}
+
+// Enter để submit
+document.addEventListener('keydown', e => {
+  if (e.key!=='Enter') return;
+  if (document.getElementById('formLogin').style.display!=='none') doLogin();
+  else doRegister();
+});
+</script>
+</body>
+</html>

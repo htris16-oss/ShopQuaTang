@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Tài khoản – Quà Tặng Yêu Thương</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Be+Vietnam+Pro:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{--rose:#B5344A;--rose-light:#F9EEF0;--rose-mid:#E8A0AC;--gold:#C9901A;--gold-light:#FDF3E0;--cream:#FDFAF6;--dark:#2A1A1F;--muted:#7A5C62;--white:#fff;--border:#EDD9DC;--green:#2E7D52;--green-light:#E8F5EE;--blue:#1a6fc9;--blue-light:#e8f0fd;--font-display:'Playfair Display',Georgia,serif;--font-body:'Be Vietnam Pro',sans-serif}
+body{font-family:var(--font-body);background:#f5f5f7;color:var(--dark);min-height:100vh}
+nav{background:var(--white);border-bottom:1px solid var(--border);padding:0 5%;position:sticky;top:0;z-index:100}
+.nav-inner{display:flex;align-items:center;justify-content:space-between;height:60px;gap:.8rem;flex-wrap:wrap}
+.logo{font-family:var(--font-display);font-size:1.15rem;color:var(--rose);font-style:italic;text-decoration:none}
+.logo span{color:var(--gold);font-style:normal}
+.nav-r{display:flex;gap:.4rem;align-items:center;flex-wrap:wrap}
+.nav-btn{border-radius:50px;font-size:.78rem;font-weight:600;cursor:pointer;padding:.4rem .8rem;text-decoration:none;font-family:var(--font-body);border:none;transition:all .2s}
+.btn-shop{background:var(--blue-light);color:var(--blue)}
+.btn-home{background:var(--rose);color:#fff}.btn-home:hover{background:#9a2a3e}
+.btn-logout{background:var(--rose-light);color:var(--rose)}.btn-logout:hover{background:var(--rose);color:#fff}
+
+.wrap{max-width:920px;margin:0 auto;padding:1.5rem 1rem}
+
+/* Profile */
+.profile-card{background:var(--white);border-radius:16px;padding:1.3rem 1.6rem;border:1px solid var(--border);display:flex;align-items:center;gap:1.2rem;margin-bottom:1.3rem;flex-wrap:wrap}
+.avatar{width:60px;height:60px;border-radius:50%;background:linear-gradient(135deg,var(--rose),var(--gold));display:flex;align-items:center;justify-content:center;font-size:1.5rem;flex-shrink:0}
+.profile-info h2{font-family:var(--font-display);font-size:1.2rem;margin-bottom:.22rem}
+.profile-info p{font-size:.8rem;color:var(--muted)}
+
+/* Tabs */
+.acc-tabs{display:flex;gap:.4rem;margin-bottom:1.2rem;flex-wrap:wrap}
+.acc-tab{background:var(--white);border:1.5px solid var(--border);border-radius:50px;padding:.42rem .9rem;font-size:.8rem;font-weight:600;color:var(--muted);cursor:pointer;transition:all .2s;font-family:var(--font-body)}
+.acc-tab.active{background:var(--rose);border-color:var(--rose);color:#fff}
+
+/* Orders */
+.orders-list{display:flex;flex-direction:column;gap:.85rem}
+.order-card{background:var(--white);border-radius:12px;border:1px solid var(--border);overflow:hidden}
+.order-head{padding:.8rem 1.1rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.4rem;background:#fafafa;border-bottom:1px solid var(--border)}
+.order-code{font-weight:700;font-size:.86rem}
+.order-date{font-size:.73rem;color:var(--muted)}
+.bdg{display:inline-flex;align-items:center;padding:.18rem .55rem;border-radius:50px;font-size:.68rem;font-weight:700}
+.bdg-pending{background:#fff3cd;color:#856404}
+.bdg-confirmed{background:var(--blue-light);color:var(--blue)}
+.bdg-shipping{background:#e8f4fd;color:#0d6efd}
+.bdg-done{background:var(--green-light);color:var(--green)}
+.bdg-cancelled{background:var(--rose-light);color:var(--rose)}
+.order-items{padding:.75rem 1.1rem}
+.oi-row{display:flex;align-items:center;gap:.65rem;padding:.4rem 0;border-bottom:1px solid #f5eef0}
+.oi-row:last-child{border:none}
+.oi-img{width:44px;height:44px;object-fit:cover;border-radius:8px;background:#f0e8e9;flex-shrink:0}
+.oi-name{font-size:.8rem;font-weight:600;flex:1}
+.oi-shop{font-size:.68rem;color:var(--muted)}
+.oi-price{font-size:.8rem;color:var(--rose);font-weight:700;white-space:nowrap}
+.order-foot{padding:.65rem 1.1rem;border-top:1px solid var(--border);background:#fafafa;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:.4rem}
+.order-total{font-size:.86rem;font-weight:700;color:var(--rose)}
+.complaint-btn{background:var(--rose-light);border:none;color:var(--rose);border-radius:8px;padding:.32rem .65rem;font-size:.74rem;font-weight:600;cursor:pointer;font-family:var(--font-body);transition:all .2s}
+.complaint-btn:hover{background:var(--rose);color:#fff}
+
+/* Empty */
+.empty-box{text-align:center;padding:2.5rem;color:var(--muted)}
+.empty-icon{font-size:2.8rem;margin-bottom:.6rem;opacity:.35}
+
+/* Forms */
+.section-card{background:var(--white);border-radius:12px;border:1px solid var(--border);padding:1.2rem 1.4rem;margin-bottom:1rem}
+.section-card h3{font-family:var(--font-display);font-size:1rem;margin-bottom:1rem;color:var(--dark)}
+.form-group{margin-bottom:.85rem}
+.form-group label{display:block;font-size:.78rem;font-weight:600;color:var(--dark);margin-bottom:.28rem}
+.form-group input,.form-group textarea,.form-group select{width:100%;border:1.5px solid var(--border);border-radius:9px;padding:.56rem .8rem;font-family:var(--font-body);font-size:.83rem;outline:none;transition:border .2s;background:var(--cream);color:var(--dark)}
+.form-group input:focus,.form-group textarea:focus,.form-group select:focus{border-color:var(--rose);box-shadow:0 0 0 3px rgba(181,52,74,.08)}
+.form-group textarea{resize:vertical;min-height:72px}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:.7rem}
+.save-btn{background:var(--rose);color:#fff;border:none;padding:.6rem 1.3rem;border-radius:9px;font-size:.86rem;font-weight:700;cursor:pointer;font-family:var(--font-body);transition:all .2s}
+.save-btn:hover{background:#9a2a3e}
+.msg-ok{background:var(--green-light);border:1px solid #c6e8d5;color:var(--green);border-radius:8px;padding:.55rem .8rem;font-size:.78rem;margin-bottom:.7rem;display:none}
+.msg-err{background:#fde8ec;border:1px solid #f5c6cc;color:#721c24;border-radius:8px;padding:.55rem .8rem;font-size:.78rem;margin-bottom:.7rem;display:none}
+
+/* ── LỊCH NHẮC ── */
+.reminder-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:.8rem;margin-bottom:1rem}
+.reminder-card{background:var(--white);border:1.5px solid var(--border);border-radius:12px;padding:.9rem 1rem;position:relative;transition:all .2s}
+.reminder-card:hover{box-shadow:0 4px 16px rgba(42,26,31,.08)}
+.reminder-card.urgent{border-color:var(--rose);background:var(--rose-light)}
+.reminder-card.soon{border-color:var(--gold);background:var(--gold-light)}
+.rem-top{display:flex;align-items:flex-start;justify-content:space-between;gap:.4rem;margin-bottom:.3rem}
+.rem-name{font-weight:700;font-size:.88rem;color:var(--dark)}
+.rem-days{font-size:.7rem;font-weight:700;padding:.16rem .5rem;border-radius:50px}
+.rem-days.urgent{background:var(--rose);color:#fff}
+.rem-days.soon{background:var(--gold);color:#fff}
+.rem-days.normal{background:var(--blue-light);color:var(--blue)}
+.rem-date{font-size:.74rem;color:var(--muted);margin-bottom:.35rem}
+.rem-tags{display:flex;gap:.25rem;flex-wrap:wrap;margin-bottom:.45rem}
+.rem-tag{font-size:.65rem;background:var(--rose-light);color:var(--rose);padding:.1rem .4rem;border-radius:50px;font-weight:600}
+.rem-actions{display:flex;gap:.35rem}
+.rem-suggest-btn{flex:1;background:var(--blue);color:#fff;border:none;padding:.33rem .55rem;border-radius:7px;font-size:.72rem;font-weight:600;cursor:pointer;font-family:var(--font-body)}
+.rem-delete-btn{background:var(--rose-light);border:none;color:var(--rose);padding:.33rem .5rem;border-radius:7px;font-size:.72rem;cursor:pointer}
+.tag-checkboxes{display:flex;flex-wrap:wrap;gap:.4rem;margin-top:.35rem}
+.tag-cb{display:none}
+.tag-cb-label{font-size:.76rem;background:var(--rose-light);border:1.5px solid var(--border);color:var(--muted);border-radius:50px;padding:.22rem .62rem;cursor:pointer;transition:all .2s;user-select:none}
+.tag-cb:checked+.tag-cb-label{background:var(--rose);border-color:var(--rose);color:#fff}
+
+/* Suggest modal */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:300;opacity:0;pointer-events:none;transition:opacity .25s;display:flex;align-items:center;justify-content:center;padding:1rem}
+.modal-overlay.open{opacity:1;pointer-events:all}
+.modal{background:var(--white);border-radius:18px;width:100%;max-width:600px;max-height:90vh;overflow-y:auto;transform:scale(.95);transition:transform .25s}
+.modal-overlay.open .modal{transform:scale(1)}
+.modal-hdr{padding:1rem 1.2rem;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;background:var(--white)}
+.modal-hdr h3{font-family:var(--font-display);font-size:1.05rem}
+.x-btn{background:none;border:none;font-size:1.2rem;cursor:pointer;color:var(--muted)}
+.x-btn:hover{color:var(--rose)}
+.suggest-grid{display:grid;grid-template-columns:1fr 1fr;gap:.75rem;padding:1.1rem}
+.suggest-card{border:1px solid var(--border);border-radius:10px;overflow:hidden;cursor:pointer;transition:all .2s}
+.suggest-card:hover{transform:translateY(-3px);box-shadow:0 4px 16px rgba(42,26,31,.1)}
+.suggest-card img{width:100%;height:95px;object-fit:cover;background:#f0e8e9}
+.suggest-card-body{padding:.6rem .72rem}
+.suggest-card-name{font-size:.8rem;font-weight:600;margin-bottom:.18rem}
+.suggest-card-price{font-size:.82rem;color:var(--rose);font-weight:700;margin-bottom:.38rem}
+.suggest-card-btn{width:100%;background:var(--rose);color:#fff;border:none;padding:.33rem;border-radius:7px;font-size:.72rem;font-weight:600;cursor:pointer;font-family:var(--font-body)}
+
+/* Complaint modal */
+.complaint-modal{max-width:480px}
+</style>
+</head>
+<body>
+<nav>
+  <div class="nav-inner">
+    <a href="index.html" class="logo">Quà Tặng <span>Yêu Thương</span></a>
+    <div class="nav-r">
+      <a href="index.html" class="nav-btn btn-home">🛍️ Mua sắm</a>
+      <a href="shop-login.html" class="nav-btn btn-shop">🏪 Shop</a>
+      <button class="nav-btn btn-logout" onclick="doLogout()">🚪 Đăng xuất</button>
+    </div>
+  </div>
+</nav>
+
+<div class="wrap">
+  <!-- Profile card -->
+  <div class="profile-card" id="profileCard">
+    <div class="avatar">👤</div>
+    <div class="profile-info">
+      <h2 id="pName">Đang tải...</h2>
+      <p id="pEmail"></p>
+      <p id="pPhone" style="margin-top:.12rem"></p>
+    </div>
+  </div>
+
+  <!-- Tabs -->
+  <div class="acc-tabs">
+    <button class="acc-tab active" onclick="showTab('orders',this)">📦 Đơn hàng</button>
+    <button class="acc-tab" onclick="showTab('reminders',this)">🎂 Lịch nhắc quà</button>
+    <button class="acc-tab" onclick="showTab('complaints',this)">📣 Khiếu nại</button>
+    <button class="acc-tab" onclick="showTab('profile',this)">👤 Tài khoản</button>
+  </div>
+
+  <!-- ── ĐƠN HÀNG ── -->
+  <div id="tab-orders">
+    <div class="orders-list" id="ordersList">
+      <div class="empty-box"><div class="empty-icon">⏳</div><p>Đang tải đơn hàng...</p></div>
+    </div>
+  </div>
+
+  <!-- ── LỊCH NHẮC QUÀ ── -->
+  <div id="tab-reminders" style="display:none">
+    <!-- Thêm ngày mới -->
+    <div class="section-card">
+      <h3>➕ Thêm ngày quan trọng</h3>
+      <div class="form-row">
+        <div class="form-group"><label>Tên sự kiện *</label><input type="text" id="remName" placeholder="VD: Sinh nhật Lan, Kỷ niệm yêu..."/></div>
+        <div class="form-group"><label>Ngày (DD/MM) *</label><input type="text" id="remDate" placeholder="VD: 25/12" maxlength="5"/></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label>Dịp</label>
+          <select id="remOccasion">
+            <option value="sinh-nhat">🎂 Sinh nhật</option>
+            <option value="ky-niem">💫 Kỷ niệm</option>
+            <option value="valentine">💝 Valentine</option>
+            <option value="8-3">🌸 8/3</option>
+            <option value="20-11">📚 20/11</option>
+            <option value="tet">🧧 Tết</option>
+            <option value="giang-sinh">🎄 Giáng sinh</option>
+            <option value="khac">📌 Khác</option>
+          </select>
+        </div>
+        <div class="form-group"><label>Tặng cho ai</label><input type="text" id="remRecipient" placeholder="VD: Bạn thân Lan, Người yêu..."/></div>
+      </div>
+      <div class="form-group">
+        <label>Sở thích người nhận (chọn nhiều để gợi ý quà chính xác hơn)</label>
+        <div class="tag-checkboxes">
+          <input type="checkbox" class="tag-cb" id="t1" value="hoa"><label class="tag-cb-label" for="t1">🌸 Hoa</label>
+          <input type="checkbox" class="tag-cb" id="t2" value="my-pham"><label class="tag-cb-label" for="t2">💄 Mỹ phẩm</label>
+          <input type="checkbox" class="tag-cb" id="t3" value="do-an"><label class="tag-cb-label" for="t3">🍫 Đồ ăn ngọt</label>
+          <input type="checkbox" class="tag-cb" id="t4" value="trang-suc"><label class="tag-cb-label" for="t4">💍 Trang sức</label>
+          <input type="checkbox" class="tag-cb" id="t5" value="sach"><label class="tag-cb-label" for="t5">📚 Sách</label>
+          <input type="checkbox" class="tag-cb" id="t6" value="thoi-trang"><label class="tag-cb-label" for="t6">👗 Thời trang</label>
+          <input type="checkbox" class="tag-cb" id="t7" value="the-thao"><label class="tag-cb-label" for="t7">⚽ Thể thao</label>
+          <input type="checkbox" class="tag-cb" id="t8" value="cong-nghe"><label class="tag-cb-label" for="t8">📱 Công nghệ</label>
+          <input type="checkbox" class="tag-cb" id="t9" value="giadung"><label class="tag-cb-label" for="t9">🏠 Gia dụng</label>
+          <input type="checkbox" class="tag-cb" id="t10" value="thu-gian"><label class="tag-cb-label" for="t10">🕯️ Thư giãn</label>
+        </div>
+      </div>
+      <div class="form-group"><label>Ghi chú</label><input type="text" id="remNote" placeholder="VD: Thích màu hồng, không ăn được chocolate..."/></div>
+      <div class="form-group"><label>📱 Số Zalo nhận thông báo nhắc (để trống = dùng SĐT đăng ký)</label><input type="tel" id="remZalo" placeholder="0901 234 567"/></div>
+      <button class="save-btn" onclick="addReminder()">💾 Lưu ngày đặc biệt</button>
+    </div>
+
+    <!-- Danh sách -->
+    <div class="reminder-grid" id="reminderGrid">
+      <div class="empty-box" style="grid-column:1/-1"><div class="empty-icon">📅</div><p>Đang tải...</p></div>
+    </div>
+  </div>
+
+  <!-- ── KHIẾU NẠI ── -->
+  <div id="tab-complaints" style="display:none">
+    <div class="section-card">
+      <h3>📣 Gửi khiếu nại</h3>
+      <div class="msg-ok" id="compOk"></div>
+      <div class="msg-err" id="compErr"></div>
+      <div class="form-group"><label>Mã đơn hàng (nếu có)</label><input type="text" id="compOrder" placeholder="VD: QT12345678"/></div>
+      <div class="form-group"><label>Nội dung khiếu nại *</label><textarea id="compContent" placeholder="Mô tả chi tiết vấn đề bạn gặp phải..."></textarea></div>
+      <button class="save-btn" onclick="submitComplaint()">📤 Gửi khiếu nại</button>
+    </div>
+    <div id="complaintsList" style="margin-top:.8rem"></div>
+  </div>
+
+  <!-- ── TÀI KHOẢN ── -->
+  <div id="tab-profile" style="display:none">
+    <div class="section-card">
+      <h3>👤 Thông tin cá nhân</h3>
+      <div class="msg-ok" id="profOk"></div>
+      <div class="msg-err" id="profErr"></div>
+      <div class="form-group"><label>Họ và tên</label><input type="text" id="editName" placeholder="Nguyễn Văn A"/></div>
+      <div class="form-row">
+        <div class="form-group"><label>Số điện thoại</label><input type="tel" id="editPhone" placeholder="0901 234 567"/></div>
+        <div class="form-group"><label>Email (không đổi được)</label><input type="email" id="editEmail" disabled style="opacity:.55"/></div>
+      </div>
+      <div class="form-group"><label>📱 Số Zalo nhận thông báo</label><input type="tel" id="editZalo" placeholder="Mặc định dùng SĐT trên"/></div>
+      <div class="form-group"><label>Địa chỉ giao hàng mặc định</label><input type="text" id="editAddr" placeholder="Số nhà, đường, phường, quận, tỉnh/TP"/></div>
+      <button class="save-btn" onclick="saveProfile()">💾 Lưu thông tin</button>
+    </div>
+    <div class="section-card">
+      <h3>🔒 Đổi mật khẩu</h3>
+      <div class="form-row">
+        <div class="form-group"><label>Mật khẩu mới</label><input type="password" id="editPwd" placeholder="Tối thiểu 6 ký tự"/></div>
+        <div class="form-group"><label>Xác nhận mật khẩu mới</label><input type="password" id="editPwd2" placeholder="Nhập lại"/></div>
+      </div>
+      <button class="save-btn" onclick="changePwd()">🔑 Đổi mật khẩu</button>
+    </div>
+  </div>
+</div>
+
+<!-- Gợi ý quà Modal -->
+<div class="modal-overlay" id="suggestModal">
+  <div class="modal">
+    <div class="modal-hdr">
+      <h3 id="suggestTitle">🎁 Gợi ý quà tặng</h3>
+      <button class="x-btn" onclick="closeModal('suggestModal')">×</button>
+    </div>
+    <div class="suggest-grid" id="suggestGrid"></div>
+  </div>
+</div>
+
+<!-- Khiếu nại theo đơn Modal -->
+<div class="modal-overlay" id="complaintModal">
+  <div class="modal complaint-modal">
+    <div class="modal-hdr">
+      <h3>📣 Khiếu nại đơn hàng</h3>
+      <button class="x-btn" onclick="closeModal('complaintModal')">×</button>
+    </div>
+    <div style="padding:1.1rem 1.2rem">
+      <div class="msg-ok" id="compModalOk"></div>
+      <div class="form-group"><label>Mã đơn hàng</label><input type="text" id="compModalOrder" disabled/></div>
+      <div class="form-group"><label>Nội dung khiếu nại *</label><textarea id="compModalContent" placeholder="Mô tả vấn đề..."></textarea></div>
+      <button class="save-btn" style="width:100%" onclick="submitComplaintModal()">📤 Gửi khiếu nại</button>
+    </div>
+  </div>
+</div>
+
+<script src="config.js"></script>
+<script>
+let db, cust = getCustomer(), allOrders=[], allReminders=[], allProducts=[];
+if (!cust) window.location.href='customer-login.html';
+
+loadSupabaseLib(function(c){
+  db=c;
+  fillProfile();
+  loadOrders();
+  loadProducts();
+});
+
+function fillProfile(){
+  document.getElementById('pName').textContent=cust.name;
+  document.getElementById('pEmail').textContent='📧 '+cust.email;
+  document.getElementById('pPhone').textContent=cust.phone?'📞 '+cust.phone:'';
+  document.getElementById('editName').value=cust.name||'';
+  document.getElementById('editEmail').value=cust.email||'';
+  document.getElementById('editPhone').value=cust.phone||'';
+  document.getElementById('editZalo').value=cust.zalo_phone||'';
+  document.getElementById('editAddr').value=cust.address||'';
+}
+
+function showTab(tab,btn){
+  ['orders','reminders','complaints','profile'].forEach(t=>document.getElementById('tab-'+t).style.display='none');
+  document.querySelectorAll('.acc-tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById('tab-'+tab).style.display='block';
+  if(btn)btn.classList.add('active');
+  if(tab==='reminders'&&allReminders.length===0) loadReminders();
+  if(tab==='complaints') loadComplaints();
+}
+
+function doLogout(){ logoutCustomer(); window.location.href='index.html'; }
+
+// ── STATUS ────────────────────────────────────────────────
+const STATUS={pending:{l:'⏳ Chờ xác nhận',c:'bdg-pending'},confirmed:{l:'✅ Đã xác nhận',c:'bdg-confirmed'},shipping:{l:'🚚 Đang giao',c:'bdg-shipping'},done:{l:'🎉 Hoàn thành',c:'bdg-done'},cancelled:{l:'❌ Đã huỷ',c:'bdg-cancelled'}};
+function bdg(s){const m=STATUS[s]||{l:s,c:''};return `<span class="bdg ${m.c}">${m.l}</span>`;}
+
+// ── ĐƠN HÀNG ─────────────────────────────────────────────
+async function loadOrders(){
+  try {
+    let q = db.from('orders').select('*, order_items(*, products(name,image_url,shops(name)))').order('created_at',{ascending:false});
+    if(cust.id) q=q.eq('customer_id',cust.id);
+    else if(cust.phone) q=q.eq('customer_phone',cust.phone);
+    const {data}=await q;
+    allOrders=data||[];
+    renderOrders();
+  } catch(e){ document.getElementById('ordersList').innerHTML='<div class="empty-box"><div class="empty-icon">❌</div><p>Không thể tải đơn hàng</p></div>'; }
+}
+
+function renderOrders(){
+  if(!allOrders.length){document.getElementById('ordersList').innerHTML='<div class="empty-box"><div class="empty-icon">🛍️</div><p>Bạn chưa có đơn hàng nào</p><br/><a href="index.html" style="background:var(--rose);color:#fff;padding:.55rem 1.2rem;border-radius:50px;text-decoration:none;font-weight:600;font-size:.84rem">Mua sắm ngay →</a></div>';return;}
+  document.getElementById('ordersList').innerHTML=allOrders.map(o=>{
+    const items=o.order_items||[];
+    const dt=new Date(o.created_at);
+    const ds=`${dt.getDate()}/${dt.getMonth()+1}/${dt.getFullYear()} ${dt.getHours()}:${String(dt.getMinutes()).padStart(2,'0')}`;
+    const tracking=items.find(i=>i.tracking_code)?.tracking_code;
+    return `<div class="order-card">
+      <div class="order-head">
+        <div><div class="order-code">Đơn #${o.order_code}</div><div class="order-date">${ds}</div></div>
+        ${bdg(o.status)}
+      </div>
+      <div class="order-items">
+        ${items.map(i=>`<div class="oi-row">
+          <img class="oi-img" src="${i.products?.image_url||''}" alt="${i.product_name}" onerror="this.style.background='#f0e8e9';this.removeAttribute('src')"/>
+          <div style="flex:1"><div class="oi-name">${i.product_name}</div><div class="oi-shop">🏪 ${i.products?.shops?.name||'Shop'} · ×${i.quantity}</div></div>
+          <div class="oi-price">${fmt(i.price*i.quantity)}</div>
+        </div>`).join('')}
+      </div>
+      <div class="order-foot">
+        <div>
+          ${tracking?`<div style="font-size:.74rem;color:var(--blue)">📦 Mã vận đơn: <strong>${tracking}</strong></div>`:''}
+          <div style="font-size:.74rem;color:var(--muted)">📍 ${o.customer_address}</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:.5rem;flex-wrap:wrap">
+          <span class="order-total">Tổng: ${fmt(o.total_amount)}</span>
+          ${o.status!=='done'&&o.status!=='cancelled'?`<button class="complaint-btn" onclick="openComplaintModal('${o.order_code}')">📣 Khiếu nại</button>`:''}
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// ── LỊCH NHẮC ────────────────────────────────────────────
+async function loadReminders(){
+  const {data}=await db.from('reminders').select('*').eq('customer_id',cust.id).order('created_at',{ascending:false});
+  allReminders=data||[];
+  renderReminders();
+}
+
+function renderReminders(){
+  if(!allReminders.length){
+    document.getElementById('reminderGrid').innerHTML='<div class="empty-box" style="grid-column:1/-1"><div class="empty-icon">📅</div><p>Chưa có ngày nào. Thêm ngày đặc biệt ở trên!</p></div>';
+    return;
+  }
+  document.getElementById('reminderGrid').innerHTML=allReminders.map(r=>{
+    const days=daysUntil(r.event_date);
+    const cls=days<=3?'urgent':days<=7?'soon':'';
+    const dCls=days<=3?'urgent':days<=7?'soon':'normal';
+    const dTxt=days===0?'Hôm nay!':days===1?'Ngày mai':'Còn '+days+' ngày';
+    return `<div class="reminder-card ${cls}">
+      <div class="rem-top">
+        <div class="rem-name">${r.event_name}</div>
+        <span class="rem-days ${dCls}">${dTxt}</span>
+      </div>
+      <div class="rem-date">${oLabel(r.occasion)} · ${r.event_date}${r.recipient_name?' · '+r.recipient_name:''}</div>
+      ${(r.tags||[]).length?`<div class="rem-tags">${r.tags.map(t=>`<span class="rem-tag">${t}</span>`).join('')}</div>`:''}
+      ${r.note?`<div style="font-size:.74rem;color:var(--muted);margin-bottom:.4rem;font-style:italic">💬 ${r.note}</div>`:''}
+      <div class="rem-actions">
+        <button class="rem-suggest-btn" onclick="openSuggest('${r.id}')">🎁 Xem gợi ý quà</button>
+        <button class="rem-delete-btn" onclick="deleteReminder('${r.id}')">🗑️</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+async function addReminder(){
+  const name=document.getElementById('remName').value.trim();
+  const date=document.getElementById('remDate').value.trim();
+  if(!name||!date){showToast('⚠️ Vui lòng nhập tên sự kiện và ngày!');return;}
+  if(!/^\d{1,2}\/\d{1,2}$/.test(date)){showToast('⚠️ Định dạng ngày: DD/MM (VD: 25/12)');return;}
+  const tags=[...document.querySelectorAll('.tag-cb:checked')].map(c=>c.value);
+  const {error}=await db.from('reminders').insert({
+    customer_id:cust.id,
+    event_name:name,
+    event_date:date,
+    occasion:document.getElementById('remOccasion').value,
+    recipient_name:document.getElementById('remRecipient').value.trim(),
+    tags,
+    note:document.getElementById('remNote').value.trim(),
+    zalo_phone:document.getElementById('remZalo').value.trim()||cust.zalo_phone||cust.phone
+  });
+  if(error){showToast('❌ Lỗi: '+error.message);return;}
+  showToast('✅ Đã lưu ngày: '+name+'!');
+  document.getElementById('remName').value='';document.getElementById('remDate').value='';document.getElementById('remRecipient').value='';document.getElementById('remNote').value='';
+  document.querySelectorAll('.tag-cb').forEach(c=>c.checked=false);
+  await loadReminders();
+}
+
+async function deleteReminder(id){
+  await db.from('reminders').delete().eq('id',id);
+  showToast('🗑️ Đã xoá!');
+  await loadReminders();
+}
+
+// ── GỢI Ý QUÀ ────────────────────────────────────────────
+async function loadProducts(){
+  const {data}=await db.from('products').select('*, shops(name)').eq('is_active',true);
+  allProducts=data||[];
+}
+
+function openSuggest(remId){
+  const r=allReminders.find(x=>x.id===remId);if(!r)return;
+  const tags=r.tags||[];
+  // Gợi ý dựa trên tags và dịp
+  let suggested=allProducts.filter(p=>{
+    const oc=(p.occasions||[]).includes(r.occasion)||r.occasion==='khac';
+    return oc;
+  });
+  // Ưu tiên sản phẩm có tag liên quan
+  suggested.sort((a,b)=>{
+    const aMatch=tags.filter(t=>(a.description||'').toLowerCase().includes(t)||(a.name||'').toLowerCase().includes(t)).length;
+    const bMatch=tags.filter(t=>(b.description||'').toLowerCase().includes(t)||(b.name||'').toLowerCase().includes(t)).length;
+    return bMatch-aMatch;
+  });
+  if(suggested.length<4) suggested=[...suggested,...allProducts.filter(p=>!suggested.includes(p))].slice(0,8);
+  suggested=suggested.slice(0,8);
+  document.getElementById('suggestTitle').textContent=`🎁 Gợi ý quà cho: ${r.event_name}`;
+  document.getElementById('suggestGrid').innerHTML=suggested.map(p=>`
+    <div class="suggest-card" onclick="window.location.href='index.html'">
+      <img src="${p.image_url||''}" alt="${p.name}" onerror="this.style.background='#f0e8e9';this.removeAttribute('src')"/>
+      <div class="suggest-card-body">
+        <div class="suggest-card-name">${p.name}</div>
+        <div class="suggest-card-price">${fmt(p.price)}</div>
+        <button class="suggest-card-btn" onclick="event.stopPropagation();window.location.href='index.html'">🛒 Mua ngay</button>
+      </div>
+    </div>`).join('');
+  openModal('suggestModal');
+}
+
+// ── KHIẾU NẠI ────────────────────────────────────────────
+async function submitComplaint(){
+  const order=document.getElementById('compOrder').value.trim();
+  const content=document.getElementById('compContent').value.trim();
+  document.querySelectorAll('#tab-complaints .msg-ok, #tab-complaints .msg-err').forEach(e=>e.style.display='none');
+  if(!content){document.getElementById('compErr').textContent='⚠️ Vui lòng nhập nội dung khiếu nại!';document.getElementById('compErr').style.display='block';return;}
+  const {error}=await db.from('complaints').insert({customer_id:cust.id,customer_name:cust.name,customer_phone:cust.phone,order_code:order||null,content});
+  if(error){document.getElementById('compErr').textContent='❌ Lỗi: '+error.message;document.getElementById('compErr').style.display='block';return;}
+  document.getElementById('compOk').textContent='✅ Đã gửi khiếu nại! Chúng tôi sẽ phản hồi trong 24 giờ.';document.getElementById('compOk').style.display='block';
+  document.getElementById('compContent').value='';document.getElementById('compOrder').value='';
+  loadComplaints();
+}
+
+function openComplaintModal(orderCode){
+  document.getElementById('compModalOrder').value=orderCode;
+  document.getElementById('compModalContent').value='';
+  document.getElementById('compModalOk').style.display='none';
+  openModal('complaintModal');
+}
+
+async function submitComplaintModal(){
+  const order=document.getElementById('compModalOrder').value;
+  const content=document.getElementById('compModalContent').value.trim();
+  if(!content){showToast('⚠️ Vui lòng nhập nội dung!');return;}
+  await db.from('complaints').insert({customer_id:cust.id,customer_name:cust.name,customer_phone:cust.phone,order_code:order,content});
+  document.getElementById('compModalOk').textContent='✅ Đã gửi! Chúng tôi sẽ phản hồi sớm.';document.getElementById('compModalOk').style.display='block';
+  document.getElementById('compModalContent').value='';
+  setTimeout(()=>closeModal('complaintModal'),1500);
+}
+
+async function loadComplaints(){
+  const {data}=await db.from('complaints').select('*').eq('customer_id',cust.id).order('created_at',{ascending:false});
+  if(!data||!data.length){document.getElementById('complaintsList').innerHTML='';return;}
+  document.getElementById('complaintsList').innerHTML=`<div class="section-card"><h3>📋 Khiếu nại của bạn</h3>`+
+    data.map(c=>`<div style="padding:.65rem 0;border-bottom:1px solid var(--border)">
+      <div style="display:flex;justify-content:space-between;margin-bottom:.3rem">
+        <strong style="font-size:.82rem">${c.order_code?'Đơn #'+c.order_code:'Khiếu nại chung'}</strong>
+        <span class="bdg ${c.status==='resolved'?'bdg-done':c.status==='processing'?'bdg-confirmed':'bdg-pending'}">${c.status==='resolved'?'✅ Đã giải quyết':c.status==='processing'?'⏳ Đang xử lý':'🔴 Mới'}</span>
+      </div>
+      <div style="font-size:.8rem;color:var(--muted);line-height:1.6">${c.content}</div>
+      ${c.admin_note?`<div style="font-size:.78rem;color:var(--green);margin-top:.3rem;background:var(--green-light);padding:.35rem .6rem;border-radius:7px">💬 Phản hồi: ${c.admin_note}</div>`:''}
+    </div>`).join('')+'</div>';
+}
+
+// ── HỒ SƠ ─────────────────────────────────────────────────
+async function saveProfile(){
+  document.querySelectorAll('#tab-profile .msg-ok,.msg-err').forEach(e=>e.style.display='none');
+  const name=document.getElementById('editName').value.trim();
+  const phone=document.getElementById('editPhone').value.trim();
+  const zalo=document.getElementById('editZalo').value.trim();
+  const addr=document.getElementById('editAddr').value.trim();
+  if(!name){document.getElementById('profErr').textContent='⚠️ Tên không được để trống!';document.getElementById('profErr').style.display='block';return;}
+  const {error}=await db.from('customers').update({name,phone,zalo_phone:zalo||phone,address:addr}).eq('id',cust.id);
+  if(error){document.getElementById('profErr').textContent='❌ Lỗi: '+error.message;document.getElementById('profErr').style.display='block';return;}
+  setCustomer({...cust,name,phone,zalo_phone:zalo||phone,address:addr});cust={...cust,name,phone,zalo_phone:zalo||phone,address:addr};
+  fillProfile();
+  document.getElementById('profOk').textContent='✅ Đã cập nhật thông tin!';document.getElementById('profOk').style.display='block';
+}
+
+async function changePwd(){
+  const pwd=document.getElementById('editPwd').value;
+  const pwd2=document.getElementById('editPwd2').value;
+  if(pwd.length<6){showToast('⚠️ Mật khẩu tối thiểu 6 ký tự!');return;}
+  if(pwd!==pwd2){showToast('⚠️ Mật khẩu xác nhận không khớp!');return;}
+  const hash=await hashPwd(pwd);
+  await db.from('customers').update({password_hash:hash}).eq('id',cust.id);
+  document.getElementById('editPwd').value='';document.getElementById('editPwd2').value='';
+  showToast('✅ Đã đổi mật khẩu thành công!');
+}
+
+function openModal(id){document.getElementById(id).classList.add('open');}
+function closeModal(id){document.getElementById(id).classList.remove('open');}
+document.querySelectorAll('.modal-overlay').forEach(o=>o.addEventListener('click',e=>{if(e.target===o)o.classList.remove('open');}));
+</script>
+</body>
+</html>
